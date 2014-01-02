@@ -3,6 +3,7 @@ package net.canarymod.api.world.blocks;
 import net.canarymod.api.inventory.CanaryItem;
 import net.canarymod.api.inventory.Item;
 import net.minecraft.block.BlockJukebox.TileEntityJukebox;
+import net.minecraft.item.ItemStack;
 
 /**
  * Jukebox wrapper implementation
@@ -26,7 +27,8 @@ public class CanaryJukebox extends CanaryTileEntity implements Jukebox {
      */
     @Override
     public Item getDisc() {
-        return getTileEntity().a().getCanaryItem();
+        ItemStack disc = getTileEntity().a();
+        return disc == null ? null : disc.getCanaryItem();
     }
 
     /**
@@ -34,10 +36,10 @@ public class CanaryJukebox extends CanaryTileEntity implements Jukebox {
      */
     @Override
     public void setDisc(Item disc) {
-        if (disc.getId() < 2256 || disc.getId() > 2267) {
+        if (disc != null && (disc.getId() < 2256 || disc.getId() > 2267)) {
             return;
         }
-        getTileEntity().a(((CanaryItem) disc).getHandle());
+        getTileEntity().a(disc == null ? null : ((CanaryItem) disc).getHandle());
     }
 
     /**
