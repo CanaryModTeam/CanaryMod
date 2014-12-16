@@ -11,6 +11,7 @@ import net.minecraft.server.gui.MinecraftServerGui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 
 import static net.canarymod.Canary.log;
 
@@ -89,6 +90,9 @@ public class Main {
                     nocontrol = true;
                 }
             }
+
+            if (new File(Canary.getWorkingPath() + "/.nocontrol").exists())
+                nocontrol = true;
 
             // Check if there is a Console in use and if we should launch a GUI as replacement for no console
             if (System.console() == null) {
