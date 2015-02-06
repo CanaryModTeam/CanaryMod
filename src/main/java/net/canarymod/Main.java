@@ -20,6 +20,9 @@ import static net.canarymod.Canary.log;
 public class Main {
     static WarningDialog warningDialog;
     static final Icon icon;
+    
+    private static boolean nocontrol;
+    private static String pluginPath = "plugins/";
 
     static {
         java.net.URL imgURL = Main.class.getResource("/assets/favicon.png");
@@ -43,11 +46,11 @@ public class Main {
         }
     }
 
-    private static boolean nocontrol;
 
     private static void initBird() {
         // Initialize the bird
-        new CanaryMod();
+        CanaryMod canary = new CanaryMod();
+        canary.scanForPlugins(pluginPath);
         // Add system internal serializers
         Canary.addSerializer(new ItemSerializer(), CanaryItem.class);
         Canary.addSerializer(new ItemSerializer(), Item.class);
@@ -84,6 +87,9 @@ public class Main {
                 }
                 else if (key.equals("nocontrol")) {
                     nocontrol = true;
+                }
+                else if (key.startsWith("p")) {
+                    pluginPath = key.substring(1);
                 }
             }
 
