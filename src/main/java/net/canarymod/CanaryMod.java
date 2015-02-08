@@ -69,7 +69,10 @@ public class CanaryMod extends Canary {
         // Initialize the plugin loader and scan for plugins
         this.pluginManager = new DefaultPluginManager();
         this.scoreboardManager = new CanaryScoreboardManager();
-
+    }
+    
+    void scanForPlugins(String path) {
+        pluginManager.setPluginPath(path);
         pluginManager.scanForPlugins();
     }
 
