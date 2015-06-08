@@ -91,7 +91,7 @@ shadowJar {
         // CanaryMod
         include(dependency('jline:jline'))
     }
-    classifier ''
+    classifier 'shaded'
 }
 assemble.dependsOn shadowJar
 
