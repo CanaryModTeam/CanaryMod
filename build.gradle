@@ -1,0 +1,157 @@
+plugins {
+    id 'java'
+    id 'maven'
+
+    id 'idea'
+    id 'eclipse'
+
+    id 'com.github.johnrengelman.shadow' version '1.2.1'
+}
+
+ext {
+    name = 'CanaryMod'
+    inceptionYear = '2012'
+    packaging = 'jar'
+    url = 'http://www.canarymod.net'
+    organization = 'CanaryMod Team'
+
+    libVersion = '1.2.1-SNAPSHOT'
+    serverVersion = '1.8.0_01-SNAPSHOT'
+}
+
+sourceCompatibility = '1.6'
+targetCompatibility = '1.6'
+
+group = 'net.canarymod'
+archivesBaseName = 'CanaryMod'
+version = '1.8.0-' + libVersion
+
+configurations {
+    deployerJars
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'Visual Illusions Repository'
+        url = 'http://repo.visualillusionsent.net/repository/public/'
+    }
+    maven {
+        name = 'Minecraft Libraries'
+        url = 'https://libraries.minecraft.net'
+    }
+    maven {
+        name = 'mcstats.org releases'
+        url = 'http://repo.mcstats.org/content/repositories/releases/'
+    }
+    maven {
+        name = 'mcstats.org snapshots'
+        url = 'http://repo.mcstats.org/content/repositories/snapshots/'
+    }
+}
+
+dependencies {
+    compile 'net.canarymod:CanaryLib:' + libVersion
+    compile 'net.minecraft:server:' + serverVersion
+    compile 'jline:jline:2.11'
+
+    testCompile 'junit:junit:4.12'
+
+    deployerJars 'org.apache.maven.wagon:wagon-ftp:2.2'
+}
+
+shadowJar {
+    exclude 'META-INF/*.SF'
+    exclude 'META-INF/*.DSA'
+    exclude 'META-INF/*.RSA'
+    relocate 'org.mcstats', 'net.canarymod.metrics'
+    dependencies {
+        // Minecraft server
+        include(dependency('net.minecraft:server'))
+        include(dependency('com.google.code.gson:gson'))
+        include(dependency('commons-codec:commons-codec'))
+        include(dependency('commons-io:commons-io'))
+        include(dependency('io.netty:netty-all'))
+        include(dependency('net.sf.trove4j:trove4j'))
+        include(dependency('org.apache.commons:commons-lang3'))
+        include(dependency('org.apache.logging.log4j:log4j-api'))
+        include(dependency('org.apache.logging.log4j:log4j-core'))
+
+        // CanaryLib
+        include(dependency('net.canarymod:CanaryLib'))
+        include(dependency('net.visualillusionsent:viutils'))
+        include(dependency('org.jdom:jdom2'))
+        include(dependency('com.mchange:c3p0'))
+        include(dependency('org.apache.logging.log4j:log4j-api'))
+        include(dependency('com.google.guava:guava'))
+        include(dependency('com.mojang:authlib'))
+        include(dependency('com.googlecode.json-simple:json-simple'))
+        include(dependency('org.mcstats.standalone:metrics'))
+
+        // CanaryMod
+        include(dependency('jline:jline'))
+    }
+    classifier ''
+}
+assemble.dependsOn shadowJar
+
+jar {
+    manifest {
+        attributes(
+                'Implementation-Name': name,
+                'Implementation-Version': version,
+                'Implementation-Vendor': organization,
+                'Implementation-Vendor-Id': 'net.canarymod',
+                'Specification-Name': 'CanaryLib',
+                'Specification-Version': libVersion,
+                'Specification-Vendor': 'CanaryMod Team',
+                'Specification-Vendor-Id': 'net.canarymod',
+                'Main-Class': 'net.canarymod.Main',
+                'Server-Version': serverVersion,
+                'Class-Path': 'lib/'
+        )
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.4'
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            configuration = configurations.deployerJars
+
+            if(project.hasProperty('repo')) {
+                repository(url: project.repo) {
+                    authentication(userName: project.repoUserName, password: project.repoPassword)
+                }
+            }
+
+            pom {
+                groupId = project.group
+                artifactId = project.archivesBaseName
+                version = project.version
+                project {
+                    name project.archivesBaseName
+                    packaging project.packaging
+                    url project.url
+
+                    scm {
+                        url 'https://github.com/CanaryModTeam/CanaryMod'
+                        connection 'scm:git:git://github.com/CanaryModTeam/CanaryMod.git'
+                        developerConnection 'scm:git:git@github.com:CanaryModTeam/CanaryMod.git'
+                    }
+
+                    licenses {
+                        license {
+                            name 'BSD 3-Clause License'
+                            url 'http://opensource.org/licenses/BSD-3-Clause'
+                            distribution 'repo'
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
