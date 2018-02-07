@@ -46,7 +46,7 @@ Source Formatting and requirements
 License
 -------
 
-Copyright (c) 2012 - 2015, CanaryMod Team
+Copyright (c) 2012 - 2018, CanaryMod Team
 Under the management of PlayBlack and Visual Illusions Entertainment  
 All rights reserved.  
   
