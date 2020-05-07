@@ -18,6 +18,11 @@ public class CanaryAttributeModifier implements AttributeModifier {
     }
 
     @Override
+    public UUID getId() {
+        return this.getUUID();
+    }
+
+    @Override
     public String getName() {
         return getNative().b();
     }
@@ -25,6 +30,21 @@ public class CanaryAttributeModifier implements AttributeModifier {
     @Override
     public int getOperation() {
         return getNative().c();
+    }
+
+    @Override
+    public double getValue() {
+        return this.getAmount();
+    }
+
+    @Override
+    public boolean getShouldSave() {
+        return this.isSaved();
+    }
+
+    @Override
+    public AttributeModifier setShouldSave(final boolean saved) {
+        return this.setSaved(saved);
     }
 
     @Override

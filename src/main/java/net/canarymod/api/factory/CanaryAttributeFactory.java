@@ -1,12 +1,15 @@
 package net.canarymod.api.factory;
 
 import net.canarymod.api.attributes.Attribute;
+import net.canarymod.api.attributes.AttributeModifier;
+import net.canarymod.api.attributes.CanaryAttributeModifier;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.EntityHorse;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author Jason (darkdiplomat)
@@ -31,4 +34,15 @@ public class CanaryAttributeFactory implements AttributeFactory {
     public Attribute getGenericAttribute(String name) {
         return mappedGeneric.get(name);
     }
+
+    @Override
+    public AttributeModifier createModifier(final String name, final double value, final int operation) {
+        return new CanaryAttributeModifier(new net.minecraft.entity.ai.attributes.AttributeModifier(name, value, operation));
+    }
+
+    @Override
+    public AttributeModifier createModifier(final UUID id, final String name, final double value, final int operation) {
+        return new CanaryAttributeModifier(new net.minecraft.entity.ai.attributes.AttributeModifier(id, name, value, operation));
+    }
+
 }

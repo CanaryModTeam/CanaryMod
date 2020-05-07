@@ -8,8 +8,11 @@ import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Jason (darkdiplomat)
@@ -53,8 +56,32 @@ public class CanaryAttributeMap implements AttributeMap {
     }
 
     @Override
+    public ModifiableAttribute getAttribute(final Attribute attribute) {
+        return this.getModifiedAttribute(attribute);
+    }
+
+    @Override
+    public ModifiableAttribute getAttributeByName(final String name) {
+        return this.getModifiedAttributeByName(name);
+    }
+
+    @Override
+    public ModifiableAttribute register(final Attribute attribute) {
+        return this.registerAttribute(attribute);
+    }
+
+    @Override
+    public Collection<ModifiableAttribute> getAttributes() {
+        return (Collection<ModifiableAttribute>) (Collection) this.getAllAttributes();
+    }
+
+    @Override
+    public void addModifier(final ModifiableAttribute modifiableAttribute) {
+        this.addModifier((ModifiedAttribute) modifiableAttribute);
+    }
+
+    @Override
     public void removeModifiers(Multimap<String, AttributeModifier> map) {
-        ArrayListMultimap lmm;
         Iterator<Map.Entry<String, AttributeModifier>> iterator = map.entries().iterator();
 
         while (iterator.hasNext()) {
